@@ -1,7 +1,19 @@
 // Email service using Resend
 import { Resend } from "resend"
 
-const resend = new Resend(process.env.RESEND_API_KEY)
+// Initialize Resend lazily to avoid build-time errors
+let resendInstance: Resend | null = null
+function getResend() {
+  if (!resendInstance) {
+    const apiKey = process.env.RESEND_API_KEY
+    if (!apiKey) {
+      throw new Error("RESEND_API_KEY environment variable is not set")
+    }
+    resendInstance = new Resend(apiKey)
+  }
+  return resendInstance
+}
+
 const FROM_EMAIL = process.env.EMAIL_FROM || "noreply@ibe160.com"
 
 export async function sendExpirationAlert(
@@ -28,7 +40,7 @@ export async function sendExpirationAlert(
     .join("\n")
 
   try {
-    const { data, error } = await resend.emails.send({
+    const { data, error } = await getResend().emails.send({
       from: `ibe160 Food Tracker <${FROM_EMAIL}>`,
       to,
       subject: `🔔 Food Expiration Alert - ${expiringItems.length} items need attention`,
@@ -100,7 +112,7 @@ export async function sendExpirationAlert(
 
 export async function sendWelcomeEmail(to: string, userName: string) {
   try {
-    const { data, error } = await resend.emails.send({
+    const { data, error } = await getResend().emails.send({
       from: `ibe160 Food Tracker <${FROM_EMAIL}>`,
       to,
       subject: "Welcome to ibe160 - Reduce Food Waste Together!",
