@@ -183,7 +183,7 @@ export async function sendContactEmail(contactData: {
 
   try {
     // Send to support team
-    const { data, error } = await resend.emails.send({
+    const { data, error } = await getResend().emails.send({
       from: `ibe160 Contact Form <${FROM_EMAIL}>`,
       to: SUPPORT_EMAIL,
       replyTo: contactData.email,
