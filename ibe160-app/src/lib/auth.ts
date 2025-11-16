@@ -7,6 +7,7 @@ import { compare } from "bcryptjs"
 import prisma from "./prisma"
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
+  trustHost: true, // Required for Vercel deployments with dynamic URLs
   providers: [
     Credentials({
       name: "credentials",
