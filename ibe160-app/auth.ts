@@ -6,6 +6,11 @@ import Credentials from "next-auth/providers/credentials"
 import { compare } from "bcryptjs"
 import prisma from "@/lib/prisma"
 
+// Debug: Log environment variables (will appear in Vercel logs)
+console.log("[auth.ts] AUTH_SECRET present?", !!process.env.AUTH_SECRET)
+console.log("[auth.ts] DATABASE_URL present?", !!process.env.DATABASE_URL)
+console.log("[auth.ts] NODE_ENV:", process.env.NODE_ENV)
+
 export const { auth, handlers, signIn, signOut } = NextAuth({
   secret: process.env.AUTH_SECRET,
   trustHost: true,
